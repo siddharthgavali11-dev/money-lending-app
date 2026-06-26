@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LendFlow | Private Money Lending Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="app-layout">
+        <!-- Sidebar overlay for mobile drawer -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-brand">
+                    <i class="bi bi-safe-fill text-primary"></i>
+                    <span>LendFlow</span>
+                </a>
+                <button class="sidebar-toggler d-md-none" id="sidebarCloseBtn">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="sidebar-item active" data-tab="dashboard">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-grid-1x2-fill"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" data-tab="borrowers">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Borrowers</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" data-tab="loans">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-cash-stack"></i>
+                        <span>Loans</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" data-tab="collections">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-wallet2"></i>
+                        <span>Collections</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" data-tab="dues">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-calendar-event-fill"></i>
+                        <span>Dues Tracker</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" data-tab="reports">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-graph-up-arrow"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" data-tab="settings">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-gear-fill"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="sidebar-item" data-tab="activity-log">
+                    <a href="#" class="sidebar-link">
+                        <i class="bi bi-clock-history"></i>
+                        <span>Activity Log</span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="sidebar-footer">
+                <div class="lender-profile">
+                    <div class="profile-avatar" id="avatarLetter">S</div>
+                    <div class="profile-info text-truncate">
+                        <h6 class="mb-0 text-white text-truncate" id="navLenderName">Siddharth Sharma</h6>
+                        <small class="text-muted text-truncate" id="navBusinessName">Apex Finance</small>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <main id="main-wrapper">
+            <!-- Top Navbar -->
+            <header class="top-navbar">
+                <div class="d-flex align-items-center gap-3">
+                    <button class="sidebar-toggler" id="sidebarToggleBtn">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <h4 class="mb-0 font-weight-bold" id="viewTitle">Dashboard</h4>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <!-- Quick Stats Pill (Disbursed vs Received) -->
+                    <div class="d-none d-lg-flex align-items-center gap-2 bg-light border rounded-pill px-3 py-1 text-muted small" id="quickStatsPill">
+                        <span class="text-success"><i class="bi bi-arrow-down-left"></i> In: <strong id="quickReceived">₹0</strong></span>
+                        <span class="vr"></span>
+                        <span class="text-primary"><i class="bi bi-arrow-up-right"></i> Out: <strong id="quickLent">₹0</strong></span>
+                    </div>
+
+                    <!-- Theme Toggle -->
+                    <button class="btn btn-outline-secondary border-0 btn-sm rounded-circle p-2" id="btnThemeToggle" title="Toggle Theme">
+                        <i class="bi bi-sun-fill" id="themeIcon"></i>
+                    </button>
+
+                    <!-- Quick Settings Short-cut -->
+                    <button class="btn btn-outline-secondary border-0 btn-sm rounded-circle p-2 d-none d-sm-block" id="btnQuickSettings" title="Backup Settings">
+                        <i class="bi bi-cloud-arrow-down-fill"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- View Containers -->
+            <div class="view-container">
+
+                <!-- 1. DASHBOARD VIEW -->
+                <section class="app-view active" id="view-dashboard">
+                    <!-- Metric Cards Grid -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-lg-3">
+                            <div class="metric-card card-primary">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div class="card-title-muted">Total Lent</div>
+                                        <div class="card-value" id="kpiTotalLent">₹0</div>
+                                    </div>
+                                    <div class="metric-icon text-primary"><i class="bi bi-cash-stack"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="metric-card card-warning">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div class="card-title-muted">Outstanding Principal</div>
+                                        <div class="card-value" id="kpiOutstandingPrincipal">₹0</div>
+                                    </div>
+                                    <div class="metric-icon text-warning"><i class="bi bi-bank"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="metric-card card-success">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div class="card-title-muted">Interest Earned</div>
+                                        <div class="card-value" id="kpiInterestEarned">₹0</div>
+                                    </div>
+                                    <div class="metric-icon text-success"><i class="bi bi-graph-up"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-lg-3">
+                            <div class="metric-card card-info">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <div class="card-title-muted">Receivable Interest</div>
+                                        <div class="card-value" id="kpiReceivableInterest">₹0</div>
+                                    </div>
+                                    <div class="metric-icon text-info"><i class="bi bi-hourglass-split"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Secondary KPIs & Stats -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-4 col-md-2">
+                            <div class="metric-card text-center p-3">
+                                <div class="card-title-muted text-center">Active</div>
+                                <div class="fs-4 fw-bold mt-1 text-primary" id="kpiActiveLoans">0</div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-2">
+                            <div class="metric-card text-center p-3">
+                                <div class="card-title-muted text-center">Closed</div>
+                                <div class="fs-4 fw-bold mt-1 text-success" id="kpiClosedLoans">0</div>
+                            </div>
+                        </div>
+                        <div class="col-4 col-md-2">
+                            <div class="metric-card text-center p-3">
+                                <div class="card-title-muted text-center">Overdue</div>
+                                <div class="fs-4 fw-bold mt-1 text-danger" id="kpiOverdueLoans">0</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="metric-card p-3">
+                                <div class="card-title-muted">Today's Inflow</div>
+                                <div class="fs-4 fw-bold mt-1 text-success" id="kpiTodayCollections">₹0</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="metric-card p-3">
+                                <div class="card-title-muted">This Month's Inflow</div>
+                                <div class="fs-4 fw-bold mt-1 text-info" id="kpiMonthlyCollections">₹0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Grid -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-12 col-lg-8">
+                            <div class="custom-card h-100">
+                                <div class="custom-card-header">
+                                    <h6 class="mb-0 fw-bold"><i class="bi bi-bar-chart-fill me-2 text-primary"></i>Collection & Interest Earnings Trend</h6>
+                                </div>
+                                <div class="p-3">
+                                    <div class="chart-container">
+                                        <canvas id="chartMonthlyTrend"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4">
+                            <div class="custom-card h-100">
+                                <div class="custom-card-header">
+                                    <h6 class="mb-0 fw-bold"><i class="bi bi-pie-chart-fill me-2 text-success"></i>Loan Breakdown</h6>
+                                </div>
+                                <div class="p-3">
+                                    <div class="chart-container">
+                                        <canvas id="chartStatus"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-6">
+                            <div class="custom-card h-100">
+                                <div class="custom-card-header">
+                                    <h6 class="mb-0 fw-bold"><i class="bi bi-person-fill-exclamation me-2 text-warning"></i>Top Outstanding Balances</h6>
+                                </div>
+                                <div class="p-3">
+                                    <div class="chart-container">
+                                        <canvas id="chartTopBorrowers"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6">
+                            <!-- Recent Activity Card inside Dashboard -->
+                            <div class="custom-card h-100">
+                                <div class="custom-card-header">
+                                    <h6 class="mb-0 fw-bold"><i class="bi bi-lightning-charge-fill me-2 text-info"></i>Recent Activity</h6>
+                                    <a href="#" class="small text-decoration-none" id="dashViewAllActivity">View All</a>
+                                </div>
+                                <div class="p-3" style="max-height: 250px; overflow-y: auto;">
+                                    <div class="timeline" id="dashboardActivityLog">
+                                        <!-- Rendered dynamically -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. BORROWERS VIEW -->
+                <section class="app-view" id="view-borrowers">
+                    <div class="custom-card">
+                        <div class="custom-card-header flex-column flex-sm-row gap-3">
+                            <h5 class="mb-0 fw-bold">Borrowers Directory</h5>
+                            <div class="d-flex gap-2 w-100 w-sm-auto">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control border-start-0" id="searchBorrowerInput" placeholder="Search by name, mobile, ID...">
+                                </div>
+                                <button class="btn btn-sm btn-primary text-nowrap d-flex align-items-center gap-1" id="btnAddBorrower">
+                                    <i class="bi bi-person-plus-fill"></i> Add Borrower
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table custom-table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Mobile</th>
+                                        <th>Guarantor</th>
+                                        <th>Created Date</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="borrowersTableBody">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. LOANS VIEW -->
+                <section class="app-view" id="view-loans">
+                    <div class="custom-card">
+                        <div class="custom-card-header flex-column flex-sm-row gap-3">
+                            <h5 class="mb-0 fw-bold">Active and Past Loans</h5>
+                            <div class="d-flex flex-wrap gap-2 w-100 w-sm-auto justify-content-sm-end">
+                                <select class="form-select form-select-sm w-auto" id="filterLoanStatus">
+                                    <option value="All">All Statuses</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Overdue">Overdue</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                                <div class="input-group input-group-sm w-auto">
+                                    <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control border-start-0" id="searchLoanInput" placeholder="Search by Loan ID, Borrower...">
+                                </div>
+                                <button class="btn btn-sm btn-primary text-nowrap d-flex align-items-center gap-1" id="btnAddLoan">
+                                    <i class="bi bi-plus-circle-fill"></i> Disburse Loan
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table custom-table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Borrower</th>
+                                        <th>Principal</th>
+                                        <th>Rate</th>
+                                        <th>Accrued Interest</th>
+                                        <th>Total Paid</th>
+                                        <th>Outstanding</th>
+                                        <th>Due Date</th>
+                                        <th>Status</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="loansTableBody">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. COLLECTIONS VIEW -->
+                <section class="app-view" id="view-collections">
+                    <div class="custom-card">
+                        <div class="custom-card-header flex-column flex-sm-row gap-3">
+                            <h5 class="mb-0 fw-bold">Collection Ledger</h5>
+                            <div class="d-flex flex-wrap gap-2 w-100 w-sm-auto justify-content-sm-end">
+                                <div class="input-group input-group-sm w-auto">
+                                    <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control border-start-0" id="searchCollectionInput" placeholder="Search receipt, loan, borrower...">
+                                </div>
+                                <button class="btn btn-sm btn-success text-nowrap d-flex align-items-center gap-1" id="btnRecordCollection">
+                                    <i class="bi bi-cash-coin"></i> Record Payment
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table custom-table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Receipt #</th>
+                                        <th>Loan ID</th>
+                                        <th>Borrower</th>
+                                        <th>Date</th>
+                                        <th>Collected Amount</th>
+                                        <th>Allocation</th>
+                                        <th>Notes</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="collectionsTableBody">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. DUES TRACKER VIEW -->
+                <section class="app-view" id="view-dues">
+                    <!-- Cards showing categorized dues counts -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6 col-md-3">
+                            <div class="metric-card card-danger text-center p-3" id="dueFilterOverdue">
+                                <div class="card-title-muted">Overdue</div>
+                                <div class="fs-4 fw-bold mt-1 text-danger" id="dueCountOverdue">0</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="metric-card card-warning text-center p-3" id="dueFilterToday">
+                                <div class="card-title-muted">Due Today</div>
+                                <div class="fs-4 fw-bold mt-1 text-warning" id="dueCountToday">0</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="metric-card card-info text-center p-3" id="dueFilterWeek">
+                                <div class="card-title-muted">Due This Week</div>
+                                <div class="fs-4 fw-bold mt-1 text-info" id="dueCountWeek">0</div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="metric-card card-success text-center p-3" id="dueFilterMonth">
+                                <div class="card-title-muted">Due This Month</div>
+                                <div class="fs-4 fw-bold mt-1 text-success" id="dueCountMonth">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="custom-card">
+                        <div class="custom-card-header flex-column flex-sm-row gap-3">
+                            <h5 class="mb-0 fw-bold" id="duesTableTitle">Upcoming Dues</h5>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="button" class="btn btn-outline-secondary active" id="btnDueFilterAll">All Dues</button>
+                                <button type="button" class="btn btn-outline-secondary" id="btnDueFilterOverdue">Overdue Only</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table custom-table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Loan ID</th>
+                                        <th>Borrower</th>
+                                        <th>Mobile</th>
+                                        <th>Principal</th>
+                                        <th>Outstanding Balance</th>
+                                        <th>Due Date</th>
+                                        <th>Days Left / Overdue</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="duesTableBody">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. REPORTS VIEW -->
+                <section class="app-view" id="view-reports">
+                    <div class="row g-3 mb-4 no-print">
+                        <div class="col-12 col-md-3">
+                            <div class="custom-card h-100 mb-0">
+                                <div class="p-3">
+                                    <label class="form-label-custom">Select Report Type</label>
+                                    <select class="form-select form-select-sm mb-3" id="selectReportType">
+                                        <option value="active-loans">Active Loans Report</option>
+                                        <option value="closed-loans">Closed Loans Report</option>
+                                        <option value="defaulters">Defaulter Report</option>
+                                        <option value="collections">Collection Report</option>
+                                        <option value="interest-earnings">Interest Earnings Report</option>
+                                        <option value="monthly-profit">Monthly Profit Report</option>
+                                    </select>
+
+                                    <!-- Date Filter options -->
+                                    <div id="reportDateFilterContainer">
+                                        <label class="form-label-custom">Date Range</label>
+                                        <select class="form-select form-select-sm mb-3" id="selectReportDateFilter">
+                                            <option value="all">All Time</option>
+                                            <option value="today">Today</option>
+                                            <option value="week">This Week</option>
+                                            <option value="month" selected>This Month</option>
+                                            <option value="year">This Year</option>
+                                            <option value="custom">Custom Date Range</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Custom dates -->
+                                    <div class="d-none" id="customDateRangeInputs">
+                                        <div class="mb-2">
+                                            <label class="form-label-custom">Start Date</label>
+                                            <input type="date" class="form-control form-control-sm form-control-custom" id="reportStartDate">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label-custom">End Date</label>
+                                            <input type="date" class="form-control form-control-sm form-control-custom" id="reportEndDate">
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-sm btn-primary w-100" id="btnGenerateReport">
+                                        <i class="bi bi-file-earmark-bar-graph-fill me-1"></i> Generate
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Report Action Bar -->
+                        <div class="col-12 col-md-9">
+                            <div class="custom-card h-100 mb-0">
+                                <div class="p-3 d-flex flex-column h-100 justify-content-between">
+                                    <div>
+                                        <h5 class="fw-bold mb-2">Financial Report Compiler</h5>
+                                        <p class="text-muted small">Select your filters in the side panel and hit Generate to view live summaries. All reports compile dynamically from LocalStorage and can be exported as structured CSV files or printed as physical PDF ledgers.</p>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-sm btn-success" id="btnExportCSV" disabled>
+                                            <i class="bi bi-filetype-csv me-1"></i> Export to CSV
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-secondary" id="btnPrintReport" disabled>
+                                            <i class="bi bi-printer me-1"></i> Print / Save PDF
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Compiled Report Output Card -->
+                    <div class="custom-card d-none" id="compiledReportCard">
+                        <div class="custom-card-header flex-column align-items-start gap-2">
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <h5 class="mb-0 fw-bold" id="compiledReportTitle">Report Output</h5>
+                                <span class="badge bg-primary text-white badge-premium" id="reportResultBadge">0 Records</span>
+                            </div>
+                            <small class="text-muted" id="compiledReportSubtitle">Report Summary Metadata</small>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table custom-table table-hover align-middle" id="reportOutputTable">
+                                <thead id="reportOutputTableHeader">
+                                    <!-- Rendered dynamically -->
+                                </thead>
+                                <tbody id="reportOutputTableBody">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. SETTINGS VIEW -->
+                <section class="app-view" id="view-settings">
+                    <div class="row g-3">
+                        <div class="col-12 col-lg-6">
+                            <div class="custom-card">
+                                <div class="custom-card-header">
+                                    <h6 class="mb-0 fw-bold"><i class="bi bi-sliders me-2 text-primary"></i>Configuration Preferences</h6>
+                                </div>
+                                <div class="p-3">
+                                    <form id="settingsForm">
+                                        <div class="mb-3">
+                                            <label class="form-label-custom">Business Name</label>
+                                            <input type="text" class="form-control form-control-custom" id="settingsBusinessName" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label-custom">Lender Name</label>
+                                            <input type="text" class="form-control form-control-custom" id="settingsLenderName" required>
+                                        </div>
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-6">
+                                                <label class="form-label-custom">Default Interest Rate (%)</label>
+                                                <input type="number" step="0.01" class="form-control form-control-custom" id="settingsDefaultRate" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label-custom">Currency Symbol</label>
+                                                <input type="text" class="form-control form-control-custom" id="settingsCurrency" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label-custom">Auto Backup Frequency</label>
+                                            <select class="form-select form-select-custom form-control-custom" id="settingsBackupFreq">
+                                                <option value="daily">Daily</option>
+                                                <option value="weekly">Weekly</option>
+                                                <option value="monthly">Monthly</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary btn-sm w-100">Save Configuration</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <!-- Backup & Restore -->
+                            <div class="custom-card mb-4">
+                                <div class="custom-card-header">
+                                    <h6 class="mb-0 fw-bold"><i class="bi bi-cloud-arrow-down-fill me-2 text-success"></i>Backup / Restore Data</h6>
+                                </div>
+                                <div class="p-3">
+                                    <p class="text-muted small">Export all transactions, borrowers, settings, and loan ledger logs to a local JSON file. This guarantees that your offline data is safe even if browser storage is cleared.</p>
+                                    <div class="d-flex gap-2 mb-3">
+                                        <button class="btn btn-success btn-sm w-50" id="btnBackupData">
+                                            <i class="bi bi-file-earmark-arrow-down-fill me-1"></i> Export Backup (JSON)
+                                        </button>
+                                        <label class="btn btn-outline-primary btn-sm w-50 mb-0 d-flex align-items-center justify-content-center cursor-pointer">
+                                            <i class="bi bi-file-earmark-arrow-up-fill me-1"></i> Import Backup
+                                            <input type="file" id="importFileInput" accept=".json" class="d-none">
+                                        </label>
+                                    </div>
+                                    <hr class="my-3 border-color">
+                                    <div class="text-danger small">
+                                        <p class="mb-2 fw-bold"><i class="bi bi-exclamation-triangle-fill me-1"></i>Danger Zone</p>
+                                        <p class="mb-2">Clearing all data wipes your LocalStorage permanently. Download a backup first before executing a factory reset.</p>
+                                        <button class="btn btn-outline-danger btn-sm w-100" id="btnFactoryReset">
+                                            <i class="bi bi-trash3-fill me-1"></i> WIPE STORAGE & RESET DEMO
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. ACTIVITY LOG VIEW -->
+                <section class="app-view" id="view-activity-log">
+                    <div class="custom-card">
+                        <div class="custom-card-header flex-column flex-sm-row gap-3">
+                            <h5 class="mb-0 fw-bold">Lender Activity Log</h5>
+                            <button class="btn btn-sm btn-outline-secondary" id="btnClearActivityLogs">
+                                <i class="bi bi-trash-fill"></i> Clear Logs
+                            </button>
+                        </div>
+                        <div class="p-4">
+                            <div class="timeline" id="fullActivityLogTimeline">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Action Button (FAB) -->
+    <div class="fab-container no-print" id="quickActionButton">
+        <button class="fab-main" id="fabMainBtn" title="Quick Actions">
+            <i class="bi bi-plus-lg"></i>
+        </button>
+        <div class="fab-buttons">
+            <button class="fab-action" id="fabAddBorrower" title="Add Borrower">
+                <i class="bi bi-person-plus-fill"></i>
+                <span class="fab-label">Add Borrower</span>
+            </button>
+            <button class="fab-action" id="fabAddLoan" title="Disburse Loan">
+                <i class="bi bi-cash-stack"></i>
+                <span class="fab-label">Disburse Loan</span>
+            </button>
+            <button class="fab-action" id="fabRecordCollection" title="Record Payment">
+                <i class="bi bi-cash-coin"></i>
+                <span class="fab-label">Record Collection</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- MODAL: ADD / EDIT BORROWER -->
+    <div class="modal fade" id="modalBorrower" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title fw-bold" id="modalBorrowerTitle">Register Borrower</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formBorrower">
+                    <input type="hidden" id="borrowerFormId">
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-custom">Full Name *</label>
+                                <input type="text" class="form-control form-control-custom" id="borrowerName" required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-custom">Mobile Number * (Unique)</label>
+                                <input type="tel" class="form-control form-control-custom" id="borrowerMobile" pattern="[0-9]{10}" placeholder="10-digit number" required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-custom">Alternate Contact Number</label>
+                                <input type="tel" class="form-control form-control-custom" id="borrowerPhoneAlt" pattern="[0-9]{10}" placeholder="10-digit number">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-custom">Occupation</label>
+                                <input type="text" class="form-control form-control-custom" id="borrowerOccupation">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-custom">Aadhaar Card Number</label>
+                                <input type="text" class="form-control form-control-custom" id="borrowerAadhaar" pattern="[0-9]{12}" placeholder="12-digit UIDAI number">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-custom">PAN Card Number</label>
+                                <input type="text" class="form-control form-control-custom" id="borrowerPAN" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" placeholder="ABCDE1234F">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-custom">Guarantor Name</label>
+                                <input type="text" class="form-control form-control-custom" id="borrowerGuarantorName">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-custom">Guarantor Mobile</label>
+                                <input type="tel" class="form-control form-control-custom" id="borrowerGuarantorPhone" pattern="[0-9]{10}" placeholder="10-digit number">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-custom">Residential Address</label>
+                                <input type="text" class="form-control form-control-custom" id="borrowerAddress">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-custom">City</label>
+                                <input type="text" class="form-control form-control-custom" id="borrowerCity">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label-custom">State</label>
+                                <input type="text" class="form-control form-control-custom" id="borrowerState">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-custom">Internal Lender Notes</label>
+                                <textarea class="form-control form-control-custom" id="borrowerNotes" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm" id="btnSaveBorrower">Save Borrower</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: DISBURSE LOAN -->
+    <div class="modal fade" id="modalLoan" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title fw-bold" id="modalLoanTitle">Disburse New Loan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formLoan">
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label-custom">Select Borrower *</label>
+                                <select class="form-select form-select-custom form-control-custom" id="loanBorrowerId" required>
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-custom">Principal Disbursed Amount *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent border-end-0" id="loanCurrencyPrefix">₹</span>
+                                    <input type="number" min="1" step="any" class="form-control form-control-custom border-start-0" id="loanPrincipal" required>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-custom">Interest Rate (%) *</label>
+                                <input type="number" min="0.01" step="any" class="form-control form-control-custom" id="loanInterestRate" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-custom">Interest Cycle *</label>
+                                <select class="form-select form-select-custom form-control-custom" id="loanInterestType" required>
+                                    <option value="monthly" selected>Monthly %</option>
+                                    <option value="annual">Annual %</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-custom">Loan Start Date *</label>
+                                <input type="date" class="form-control form-control-custom" id="loanDate" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-custom">Duration (Months) *</label>
+                                <input type="number" min="1" class="form-control form-control-custom" id="loanDuration" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-custom">Maturity / Due Date *</label>
+                                <input type="date" class="form-control form-control-custom" id="loanDueDate" readonly required>
+                                <small class="text-muted small">Auto-calculated from Start Date & Duration</small>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-custom">Notes</label>
+                                <textarea class="form-control form-control-custom" id="loanNotes" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Confirm Disbursement</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: RECORD COLLECTION -->
+    <div class="modal fade" id="modalCollection" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title fw-bold" id="modalCollectionTitle">Record Payment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formCollection">
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label-custom">Select Active Loan *</label>
+                                <select class="form-select form-select-custom form-control-custom" id="collLoanId" required>
+                                    <!-- Populated dynamically -->
+                                </select>
+                            </div>
+                            
+                            <!-- Dynamic loan status preview container -->
+                            <div class="col-12 d-none" id="collLoanPreviewContainer">
+                                <div class="bg-light border rounded p-3 text-muted small" id="collLoanPreview">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label-custom">Payment Date *</label>
+                                <input type="date" class="form-control form-control-custom" id="collDate" required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-custom">Payment Type Allocation *</label>
+                                <select class="form-select form-select-custom form-control-custom" id="collType" required>
+                                    <option value="Mixed" selected>Mixed (Interest first, then Principal)</option>
+                                    <option value="Interest">Interest Payment Only</option>
+                                    <option value="Principal">Principal Payment Only</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-custom">Collected Amount *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-transparent border-end-0" id="collCurrencyPrefix">₹</span>
+                                    <input type="number" min="0.01" step="any" class="form-control form-control-custom border-start-0" id="collAmount" required>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label-custom">Collection Notes / Comments</label>
+                                <textarea class="form-control form-control-custom" id="collNotes" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer modal-footer-custom">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success btn-sm">Record Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: BORROWER PROFILE & LEDGER VIEW -->
+    <div class="modal fade" id="modalLedger" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom justify-content-between align-items-center">
+                    <h5 class="modal-title fw-bold" id="ledgerTitleName">Borrower Transaction Statement</h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-secondary d-none d-sm-block" id="btnPrintLedger">
+                            <i class="bi bi-printer me-1"></i> Print Statement
+                        </button>
+                        <button type="button" class="btn-close ms-0" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body p-4" id="ledgerPrintArea">
+                    <!-- Borrower profile card -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-12 col-lg-7">
+                            <h6 class="fw-bold mb-3 border-bottom pb-2">Borrower Details</h6>
+                            <div class="details-list">
+                                <div class="details-item"><span class="details-label">ID</span><div class="details-val" id="ledBorrowerId">BRW-00000</div></div>
+                                <div class="details-item"><span class="details-label">Mobile</span><div class="details-val" id="ledBorrowerMobile">-</div></div>
+                                <div class="details-item"><span class="details-label">Aadhaar UID</span><div class="details-val" id="ledBorrowerAadhaar">-</div></div>
+                                <div class="details-item"><span class="details-label">PAN Number</span><div class="details-val" id="ledBorrowerPAN">-</div></div>
+                                <div class="details-item"><span class="details-label">Occupation</span><div class="details-val" id="ledBorrowerOccupation">-</div></div>
+                                <div class="details-item"><span class="details-label">Guarantor Info</span><div class="details-val" id="ledBorrowerGuarantor">-</div></div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-5">
+                            <h6 class="fw-bold mb-3 border-bottom pb-2">Account Summary</h6>
+                            <div class="details-list">
+                                <div class="details-item"><span class="details-label">Total Loans Count</span><div class="details-val text-primary" id="ledTotalLoans">0</div></div>
+                                <div class="details-item"><span class="details-label">Total Principal Borrowed</span><div class="details-val" id="ledTotalBorrowed">₹0</div></div>
+                                <div class="details-item"><span class="details-label">Total Collections Paid</span><div class="details-val text-success" id="ledTotalPaid">₹0</div></div>
+                                <div class="details-item"><span class="details-label">Total Outstanding Principal</span><div class="details-val text-warning" id="ledOutstandingPrincipal">₹0</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ledger Table -->
+                    <h6 class="fw-bold mb-3 border-bottom pb-2">Ledger Logs (Chronological Statement)</h6>
+                    <div class="table-responsive">
+                        <table class="table custom-table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Event Description</th>
+                                    <th>Ref ID</th>
+                                    <th class="text-end">Debited Amount</th>
+                                    <th class="text-end">Credited Amount</th>
+                                    <th class="text-end">Running Principal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ledgerTableBody">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: LOAN ACCOUNT SUMMARY DETAILS -->
+    <div class="modal fade" id="modalLoanDetails" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom justify-content-between align-items-center">
+                    <h5 class="modal-title fw-bold" id="loanDetailsTitle">Loan Ledger Balance Sheet</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="row g-3 mb-4">
+                        <div class="col-12 col-md-6">
+                            <h6 class="fw-bold mb-3 border-bottom pb-2">Agreement Parameters</h6>
+                            <div class="details-list">
+                                <div class="details-item"><span class="details-label">Loan Reference</span><div class="details-val" id="detLoanId">LON-00000</div></div>
+                                <div class="details-item"><span class="details-label">Borrower Account</span><div class="details-val" id="detBorrower">-</div></div>
+                                <div class="details-item"><span class="details-label">Disbursement Date</span><div class="details-val" id="detDisbursedDate">-</div></div>
+                                <div class="details-item"><span class="details-label">Due/Maturity Date</span><div class="details-val" id="detDueDate">-</div></div>
+                                <div class="details-item"><span class="details-label">Disbursed Principal</span><div class="details-val" id="detPrincipal">₹0</div></div>
+                                <div class="details-item"><span class="details-label">Interest Specification</span><div class="details-val" id="detRate">-</div></div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <h6 class="fw-bold mb-3 border-bottom pb-2">Accrual and Payment Balances</h6>
+                            <div class="details-list">
+                                <div class="details-item"><span class="details-label">Total Accrued Interest</span><div class="details-val text-primary" id="detInterestAccrued">₹0</div></div>
+                                <div class="details-item"><span class="details-label">Total Paid (Collections)</span><div class="details-val text-success" id="detTotalPaid">₹0</div></div>
+                                <div class="details-item"><span class="details-label">Principal Repaid</span><div class="details-val" id="detPrincipalPaid">₹0</div></div>
+                                <div class="details-item"><span class="details-label">Interest Repaid</span><div class="details-val" id="detInterestPaid">₹0</div></div>
+                                <div class="details-item"><span class="details-label">Remaining Principal</span><div class="details-val text-warning" id="detRemainingPrincipal">₹0</div></div>
+                                <div class="details-item"><span class="details-label">Total Outstanding Balance</span><div class="details-val text-danger" id="detTotalOutstanding">₹0</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0">Loan Payment History</h6>
+                        <span class="badge bg-secondary badge-premium" id="detProfitability">0% Profitability Ratio</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table custom-table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Receipt</th>
+                                    <th>Date</th>
+                                    <th class="text-end">Paid Amount</th>
+                                    <th class="text-end">To Interest</th>
+                                    <th class="text-end">To Principal</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody id="loanTxTableBody">
+                                <!-- Rendered dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOASTS & NOTIFICATIONS ==================== -->
+    <div class="toast-container-custom" id="toastContainer">
+        <!-- Template Toast -->
+        <div class="toast toast-custom hide" role="alert" aria-live="assertive" aria-atomic="true" id="appToast">
+            <div class="toast-header border-0 bg-transparent py-2">
+                <i class="bi bi-info-circle-fill text-primary me-2" id="toastIcon"></i>
+                <strong class="me-auto" id="toastTitle">LendFlow System</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body pt-0 pb-3 px-3" id="toastMessage">
+                Notification message goes here.
+            </div>
+        </div>
+    </div>
+
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Application Javascript Modules -->
+    <script src="js/storage.js"></script>
+    <script src="js/settingsManager.js"></script>
+    <script src="js/backupManager.js"></script>
+    <script src="js/borrowerManager.js"></script>
+    <script src="js/loanManager.js"></script>
+    <script src="js/transactionManager.js"></script>
+    <script src="js/reportManager.js"></script>
+    <script src="js/dashboardManager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
