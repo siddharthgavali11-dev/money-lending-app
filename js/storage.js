@@ -41,7 +41,7 @@ class StorageManager {
         
         const defaultSettings = {
             businessName: "Apex Finance Solutions",
-            lenderName: "Siddharth Sharma",
+            lenderName: "Siddharth Gavali",
             defaultInterestRate: 2, // 2% monthly
             currencySymbol: "₹",
             themePreference: "dark",
