@@ -1,79 +1,98 @@
-💸 LendFlow - Private Money Lending Dashboard
-LendFlow is an offline-first private money lending dashboard for managing borrowers, loans, collections, interest calculations, reports, and backups efficiently.
+# 💸 LendFlow – Private Money Lending Dashboard
 
-📌 Overview
-LendFlow is a lightweight and offline-first money lending management application designed for private lenders and small finance businesses. It helps manage borrowers, loans, repayments, collections, interest calculations, overdue tracking, reports, and backups — all from a single dashboard.
-No server. No database. No setup. Just open and use.
+LendFlow is a browser-based dashboard for managing borrowers, loans, collections, interest calculations, reports and backups, built for private lenders and small finance businesses.
 
-✨ Features
-📊 Dashboard
-Real-time business overview
-Loan statistics and KPIs
-Collection summaries
-Outstanding balance tracking
-Overdue loan monitoring
+**Live demo:** [money-lending-app-blue.vercel.app](https://money-lending-app-blue.vercel.app)
 
-👥 Borrower Management
-Add and manage borrower profiles
-Store contact and identification details
-Maintain guarantor information
-Borrower-wise loan history
+## 📌 Overview
 
-💰 Loan Management
-Create and track loans
-Monthly or annual interest rates
-Automatic interest calculations
-Due date tracking
-Loan status management (Active, Closed, Overdue)
+LendFlow keeps everything in one dashboard: borrowers, loans, repayments, collections, interest calculations, overdue tracking, reports and backups.
 
-💵 Collections & Transactions
-Record repayments
-Principal and interest tracking
-Receipt generation
-Transaction history
+It runs entirely in the browser, with no server or database. Data is stored in your browser's LocalStorage, so use Backup & Restore to keep a copy. The page loads Bootstrap, Chart.js and a few other libraries from CDNs, so it needs an internet connection to load.
 
-📅 Dues Tracker
-Monitor upcoming dues
-Identify overdue accounts
-Track pending collections
+## ✨ Features
 
-📈 Reports
-Daily, Weekly, Monthly & Yearly reports
-Custom date range reports
+### 📊 Dashboard
+- Business overview with loan statistics and KPIs
+- Collection summaries
+- Outstanding balance tracking
+- Overdue loan monitoring
 
-⚙️ Settings
-Business profile management
-Default interest configuration
-Currency customization
-Light / Dark theme support
+### 👥 Borrower Management
+- Add and manage borrower profiles
+- Store contact and identification details
+- Maintain guarantor information
+- Borrower-wise loan history
 
-🔒 Backup & Restore
-Export complete application data
-Import backups
-Secure JSON-based storage
+### 💰 Loan Management
+- Create and track loans
+- Monthly or annual interest rates
+- Automatic interest calculations
+- Due date tracking
+- Loan status management (Active, Closed, Overdue)
 
-## Technology Stack
+### 💵 Collections & Transactions
+- Record repayments
+- Principal and interest tracking
+- Receipt generation
+- Transaction history
+
+### 📅 Dues Tracker
+- Monitor upcoming dues
+- Identify overdue accounts
+- Track pending collections
+
+### 📈 Reports
+- Daily, weekly, monthly and yearly reports
+- Custom date range reports
+
+### ⚙️ Settings
+- Business profile management
+- Default interest configuration
+- Currency customization
+- Light / dark theme support
+
+### 🔒 Backup & Restore
+- Export complete application data
+- Import backups
+- JSON-based storage
+
+## 🛠️ Tech Stack
 
 - HTML5
 - CSS3
 - JavaScript (ES6)
-- Bootstrap 5
-- Bootstrap Icons
+- Bootstrap 5 and Bootstrap Icons
+- Chart.js
+- canvas-confetti
 - LocalStorage API
 
+## 📂 Project Structure
+
+```
 money-lending-app/
-│
 ├── index.html
 ├── css/
 │   └── style.css
-│
-├── js/
-│   ├── app.js
-│   ├── storage.js
-│   ├── borrowerManager.js
-│   ├── loanManager.js
-│   ├── transactionManager.js
-│   ├── dashboardManager.js
-│   ├── reportManager.js
-│   ├── settingsManager.js
-│   └── backupManager.js
+└── js/
+    ├── app.js
+    ├── storage.js
+    ├── borrowerManager.js
+    ├── loanManager.js
+    ├── transactionManager.js
+    ├── dashboardManager.js
+    ├── reportManager.js
+    ├── settingsManager.js
+    └── backupManager.js
+```
+
+Each module in `js/` handles one area of the app (borrowers, loans, transactions, dashboard, reports, settings, backups), and `storage.js` wraps LocalStorage access.
+
+## ▶️ Run Locally
+
+```bash
+git clone https://github.com/siddharthgavali11-dev/money-lending-app.git
+cd money-lending-app
+```
+
+Open `index.html` in your browser. No installation or build step is needed.
